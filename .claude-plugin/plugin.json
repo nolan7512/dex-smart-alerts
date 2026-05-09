@@ -1,0 +1,10 @@
+{
+  "name": "dex-smart-alerts",
+  "version": "1.0.0",
+  "description": "Create and manage persistent price alerts on OKX DEX using okx-dex-market and OpenClaw cron jobs",
+  "author": {
+    "name": "Nolan Rothschild"
+  },
+  "license": "MIT",
+  "keywords": ["price-alert", "okx", "dex", "cron", "utility"]
+}

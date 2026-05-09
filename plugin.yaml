@@ -1,0 +1,31 @@
+schema_version: 1
+
+name: dex-smart-alerts
+version: "1.1.0"
+
+description: Persistent smart price alerts for OKX DEX with OpenClaw cron monitoring and intelligent trading notifications.
+
+author:
+  name: "Nolan Rothschild"
+  github: "nolan7512"
+
+license: MIT
+
+category: utility
+
+tags:
+  - alerts
+  - okx
+  - dex
+  - cron
+  - monitoring
+  - notifications
+  - utility
+  - market-watch
+  - smart-alerts
+
+components:
+  skill:
+    dir: "."
+
+api_calls: []
