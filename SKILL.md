@@ -1,44 +1,104 @@
 ---
+
 name: dex-smart-alerts
-version: "1.1.0"
+version: "2.0.0"
 
 description: >
-  Create persistent smart price alerts for OKX DEX using OpenClaw cron monitoring.
-  Supports natural language triggers, recurring monitoring, breakout alerts,
-  percentage moves, support/resistance watching, and intelligent notifications.
+
+  Fully autonomous persistent OKX DEX monitoring and smart alert system for OpenClaw.
+  Supports recurring cron workflows, live market monitoring, breakout detection,
+  support/resistance tracking, volatility analysis, percentage-based alerts,
+  and automatic Telegram/Discord notifications using real-time OKX DEX market data.
 
 author:
   name: "Nolan"
 
 tags:
-  - alerts
-  - monitoring
-  - trading
-  - cron
-  - okx-dex
-  - smart-alerts
-  - telegram
-  - notifications
+- alerts
+- monitoring
+- trading
+- cron
+- okx-dex
+- smart-alerts
+- telegram
+- notifications
+- automation
+- autonomous-agent
+- market-monitoring
+
 ---
 
-# OKX Smart Alerts
+# DEX Smart Alerts
 
 ## Overview
 
-OKX Smart Alerts allows users to create intelligent persistent market alerts using OKX DEX price data and OpenClaw cron jobs.
+DEX Smart Alerts lets your AI agent create, execute, and manage fully autonomous persistent market monitoring workflows for any token on OKX DEX.
 
-The skill continuously monitors token prices and sends notifications through the user's configured OpenClaw notification channel (Telegram, Discord, etc).
+Core operations:
 
-This skill is optimized for:
+* Create recurring cron-based token monitors
+* Continuously fetch live token prices using `okx-dex-market`
+* Monitor tokens automatically at configurable intervals
+* Detect breakout, support, resistance, pump, dump, and volatility conditions
+* Send real-time notifications to configured OpenClaw Channels (Telegram, Discord, etc.)
+* Manage monitoring intervals, cooldowns, expiration, and recurring alert workflows
+* Execute recurring autonomous monitoring loops without manual interaction
 
-* active traders
-* swing traders
-* breakout monitoring
-* meme coin monitoring
-* support/resistance tracking
-* hands-free market watching
+The skill supports natural language requests ranging from beginner-friendly monitoring to advanced trader automation workflows.
 
-The goal is to reduce manual chart watching and simplify recurring market monitoring workflows.
+Example requests:
+
+* Monitor BTC every 1 minute
+* Track ETH every 5m and send updates
+* Alert me if SOL breaks resistance
+* Watch BONK volatility tonight
+* Notify me if PEPE pumps 10%
+* Monitor meme coins continuously
+
+Execution workflow:
+
+User Request
+→ Parse Monitoring Intent
+→ Create Cron Schedule
+→ Fetch OKX DEX Market Data
+→ Evaluate Trigger Conditions
+→ Format Alert Message
+→ Send Notification
+→ Repeat Continuously
+
+The skill behaves as an autonomous monitoring agent, NOT a passive reminder system.
+
+---
+
+# Autonomous Monitoring Behavior
+
+When users request:
+
+* monitoring
+* recurring tracking
+* token watching
+* scheduled updates
+* breakout alerts
+* support/resistance watching
+* volatility tracking
+* pump/dump notifications
+
+the agent MUST:
+
+1. Create a recurring cron workflow
+2. Automatically fetch live OKX DEX market data
+3. Evaluate conditions continuously
+4. Format trader-friendly alerts
+5. Send notifications automatically
+6. Continue monitoring until explicitly stopped
+
+The skill MUST NEVER behave as:
+
+* a simple timer
+* reminder app
+* acknowledgement-only scheduler
+
+The skill MUST actively execute recurring market monitoring loops.
 
 ---
 
@@ -70,6 +130,7 @@ The goal is to reduce manual chart watching and simplify recurring market monito
 
 * monitor BONK every 5 minutes
 * keep watching DOGE for 24h
+* track BTC continuously
 
 ### Volatility Monitoring
 
@@ -77,13 +138,19 @@ The goal is to reduce manual chart watching and simplify recurring market monito
 * detect rapid price expansion
 * monitor unusual market activity
 
+### Autonomous Recurring Updates
+
+* send BTC updates every minute
+* continuously monitor ETH market
+* recurring SOL market reports
+
 ---
 
 # Trigger Coverage Matrix
 
 The user may express intent in many different ways.
 
-The skill should recognize all of the following as monitoring or alert requests.
+The skill should recognize ALL of the following as recurring autonomous monitoring requests.
 
 ## Standard Trading Phrases
 
@@ -156,13 +223,50 @@ The skill should recognize all of the following as monitoring or alert requests.
 
 ---
 
+# Required Runtime Behavior
+
+For every recurring monitor:
+
+1. Parse token/pair
+2. Determine timeframe
+3. Determine trigger conditions
+4. Create recurring cron job
+5. On EVERY cron execution:
+
+   * call `okx-dex-market`
+   * fetch latest market data
+   * evaluate conditions
+   * format trader-friendly alert
+   * send notification
+6. Continue execution until stopped
+
+The cron execution MUST repeatedly fetch real market data.
+
+---
+
+# Market Data Execution Pipeline
+
+Execution flow:
+
+Cron Trigger
+→ Call `okx-dex-market`
+→ Fetch Live Market Data
+→ Evaluate Trigger Conditions
+→ Generate Alert Context
+→ Format Notification
+→ Send Telegram/Discord Message
+→ Wait Until Next Cron Execution
+
+---
+
 # Keywords
 
 price alert, market watch, monitor token, breakout alert,
 support alert, resistance alert, pump alert, dump alert,
 persistent monitoring, cron alert, volatility watcher,
 trading notification, market tracking, telegram alerts,
-crypto monitoring, smart notifications
+crypto monitoring, smart notifications,
+autonomous monitoring, recurring market tracking
 
 ---
 
@@ -181,110 +285,24 @@ This skill uses OpenClaw notification Channels for alert delivery.
    * Telegram Chat ID
 5. Verify delivery before enabling persistent monitoring
 
-## Telegram Bot API Format
-
-```text
-https://api.telegram.org/[bot-token]/sendMessage?chat_id=[chat-id]&text=[message]
-```
-
-## Telegram Message Payload Example
-
-```text
-  "🚨 ALERT TRIGGERED\n\nToken: ETH\nCurrent Price: $2788\nCondition: Below $2800\nInterval: 5m\nTime: 2026-05-09 14:00 UTC\n\nSuggested Action:\nReview momentum or prepare follow-up trade execution."
-```
-
 ## Supported Notification Channels
 
 * Telegram
 * Discord
 * Other OpenClaw-supported channels
 
-## Notification Flow
-
-Market Check
-→ Trigger Condition
-→ OpenClaw Notification Channel
-→ Telegram / Discord Delivery
-
----
-
-# Pre-flight Checks
-
-Before creating alerts:
-
-1. Verify `okx-dex-market` skill is installed
-2. Verify OpenClaw notification channel exists
-3. Verify cron jobs are enabled
-4. Validate token symbol or address
-5. Validate interval and expiration values
-
-If validation fails:
-
-* explain the issue clearly
-* provide corrective action
-* avoid creating broken cron jobs
-
----
-
-# Commands
-
-## Create Alert
-
-Examples:
-
-* "Set alert for ETH below 2800"
-* "Watch BTC breakout above 70k"
-* "Monitor PEPE every 5 minutes"
-* "Alert me if SOL pumps 10%"
-
-Supported options:
-
-* fixed price
-* percentage moves
-* breakout monitoring
-* recurring checks
-* expiration windows
-
----
-
-## List Alerts
-
-Examples:
-
-* "Show my alerts"
-* "List active monitors"
-* "What alerts are running?"
-
----
-
-## Delete Alert
-
-Examples:
-
-* "Delete BTC alert"
-* "Remove monitor #12"
-
----
-
-## Status Check
-
-Examples:
-
-* "Check alert status"
-* "Verify notifications"
-* "Is monitoring running?"
-
 ---
 
 # Notification Format
 
-When an alert triggers, always include:
+Triggered alerts should always include:
 
 * token name
 * current price
-* target condition
+* trigger condition
 * timestamp
 * monitoring interval
+* short market context
 * suggested next action
 
 Example:
@@ -302,39 +320,41 @@ Review momentum or prepare follow-up trade execution.
 
 ---
 
-# Output Contract
+# Pre-flight Checks
 
-All triggered alerts should contain:
+Before creating recurring monitors:
 
-1. token name
-2. current price
-3. trigger condition
-4. timestamp
-5. monitoring interval
-6. short momentum context
-7. suggested next action
+1. Verify `okx-dex-market` skill is installed
+2. Verify OpenClaw notification channel exists
+3. Verify cron jobs are enabled
+4. Validate token symbol or address
+5. Validate interval and expiration values
 
-The skill should prioritize concise and trader-friendly outputs.
+If validation fails:
+
+* explain the issue clearly
+* provide corrective action
+* avoid creating broken cron jobs
 
 ---
 
 # Reliability Rules
 
-## Error Handling
-
-### Price Fetch Failure
+## Price Fetch Failure
 
 * retry up to 3 times
 * fallback to index price
+* continue monitoring loop
 * notify only if all retries fail
 
-### Cron Failure
+## Cron Failure
 
 * retry cron creation twice
-* verify persistence after creation
+* verify cron persistence
 
-### Notification Failure
+## Notification Failure
 
+* retry notification delivery
 * rely on OpenClaw retry system
 * log failed delivery attempts
 
@@ -377,6 +397,14 @@ Prevent duplicate spam alerts:
 
 ---
 
+# Required Tools
+
+* cron
+* okx-dex-market
+* telegram.sendMessage
+
+---
+
 # Do Not Use This Skill For
 
 This skill is NOT designed for:
@@ -387,16 +415,7 @@ This skill is NOT designed for:
 * high-frequency trading
 * automated leverage trading
 
-This skill focuses specifically on persistent monitoring and notifications.
-
----
-
-# Recommended Companion Skills
-
-* okx-dex-swap
-* okx-wallet-portfolio
-* okx-dex-token
-* okx-market-scanner
+This skill focuses specifically on autonomous persistent monitoring and notifications.
 
 ---
 
@@ -408,8 +427,9 @@ The workflow prioritizes:
 
 * low friction setup
 * flexible natural language
+* autonomous execution
 * persistent monitoring
 * reliable notifications
 * trader-friendly outputs
 
-The skill should behave like a proactive market assistant rather than a simple alert bot.
+The skill should behave like a proactive autonomous market assistant rather than a simple alert bot.

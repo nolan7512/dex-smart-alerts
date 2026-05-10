@@ -1,10 +1,24 @@
 {
   "name": "dex-smart-alerts",
   "version": "1.0.0",
-  "description": "Create and manage persistent price alerts on OKX DEX using okx-dex-market and OpenClaw cron jobs",
+  "description": "Fully autonomous OKX DEX monitoring and smart alert system using recurring cron workflows, live market tracking, breakout detection, volatility monitoring, and Telegram notifications.",
   "author": {
-    "name": "Nolan Rothschild"
+    "name": "Nolan Rothschild",
+    "github": "nolan7512"
   },
   "license": "MIT",
-  "keywords": ["price-alert", "okx", "dex", "cron", "utility"]
+  "keywords": [
+    "price-alert",
+    "okx",
+    "dex",
+    "cron",
+    "monitoring",
+    "telegram",
+    "market-watch",
+    "automation",
+    "autonomous-agent",
+    "breakout-alert",
+    "volatility-monitoring",
+    "persistent-monitoring"
+  ]
 }

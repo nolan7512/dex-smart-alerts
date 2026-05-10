@@ -3,7 +3,10 @@ schema_version: 1
 name: dex-smart-alerts
 version: "1.0.0"
 
-description: Persistent smart price alerts for OKX DEX with OpenClaw cron monitoring and intelligent trading notifications.
+description: >
+  Fully autonomous persistent OKX DEX monitoring and smart alert system
+  using recurring cron workflows, real-time market tracking,
+  breakout detection, volatility monitoring, and Telegram notifications.
 
 author:
   name: "Nolan Rothschild"
@@ -14,19 +17,46 @@ license: MIT
 category: utility
 
 tags:
-  - alerts
-  - okx
-  - dex
-  - cron
-  - monitoring
-  - notifications
-  - utility
-  - market-watch
-  - smart-alerts
+
+- alerts
+- okx
+- cron
+- monitoring
+- notifications
+- utility
+- market-watch
+- smart-alerts
+- volatility
+- breakout-monitoring
 
 components:
   skill:
     dir: "."
 
+dependencies:
+
+- okx-dex-market
+
+capabilities:
+
+- recurring-monitoring
+- cron-execution
+- telegram-notifications
+- volatility-detection
+- breakout-alerts
+- support-resistance-monitoring
+- autonomous-market-tracking
+
 api_calls:
-  - https://api.telegram.org
+
+- https://api.telegram.org
+- https://web3.okx.com
+
+permissions:
+cron: true
+notifications: true
+external_api: true
+
+runtime:
+persistent: true
+autonomous: true
