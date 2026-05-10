@@ -1,7 +1,9 @@
+# plugin.yaml
+
 schema_version: 1
 
 name: dex-smart-alerts
-version: "1.0.0"
+version: "2.0.0"
 
 description: >
   Fully autonomous persistent OKX DEX monitoring and smart alert system
@@ -36,6 +38,7 @@ components:
 dependencies:
 
 - okx-dex-market
+- okx-dex-token
 
 capabilities:
 

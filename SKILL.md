@@ -30,19 +30,28 @@ tags:
 
 ## Overview
 
-DEX Smart Alerts lets your AI agent create, execute, and manage fully autonomous persistent market monitoring workflows for any token on OKX DEX.
+DEX Smart Alerts is a fully autonomous recurring crypto market monitoring skill for OpenClaw.
 
-The skill continuously fetches real-time market data using `okx-dex-market`, evaluates trigger conditions, and sends notifications through configured OpenClaw channels such as Telegram or Discord.
+The skill continuously monitors token prices using OKX DEX market tools, evaluates trigger conditions, and automatically sends notifications through Telegram, Discord, or other OpenClaw-supported channels.
+
+The system is optimized for:
+
+* active traders
+* swing traders
+* breakout monitoring
+* meme coin tracking
+* volatility detection
+* support/resistance monitoring
+* hands-free recurring market watching
 
 Execution workflow:
 
 User Request
-→ Parse Monitoring Intent
 → Create Recurring Cron Job
 → Call `okx-dex-market`
 → Fetch Live Market Data
-→ Evaluate Conditions
-→ Format Alert Message
+→ Evaluate Trigger Conditions
+→ Format Trader-Friendly Alert
 → Send Telegram / Discord Notification
 → Repeat Continuously
 
@@ -50,47 +59,46 @@ The skill behaves as an autonomous monitoring agent, NOT a passive reminder syst
 
 ---
 
-# Autonomous Runtime Behavior
+# Autonomous Runtime Rules
 
 When users request:
 
 * recurring monitoring
-* token watching
-* market tracking
+* token tracking
+* market watching
 * recurring updates
-* breakout monitoring
+* volatility monitoring
+* breakout alerts
 * support/resistance alerts
-* volatility tracking
 * pump/dump notifications
 
 the agent MUST:
 
 1. Create recurring cron workflows
-2. Continuously call `okx-dex-market`
-3. Fetch fresh live token market data
-4. Evaluate trigger conditions
-5. Format trader-friendly alerts
-6. Send notifications automatically
-7. Continue monitoring until explicitly stopped
+2. Continuously fetch fresh market data
+3. Evaluate conditions automatically
+4. Send trader-friendly notifications
+5. Continue monitoring until explicitly stopped
 
 The agent MUST NEVER:
 
 * only acknowledge requests
 * behave as a reminder app
-* send static placeholder notifications
+* send placeholder notifications
 * skip live market fetches
 
 The agent MUST ALWAYS fetch fresh market data before sending notifications.
 
 ---
 
-# Required Runtime Execution
+# Mandatory Execution Contract
 
-For every recurring monitor:
+For EVERY recurring monitor:
 
 1. Parse:
 
-   * token/pair
+   * token
+   * pair
    * interval
    * trigger conditions
    * expiration
@@ -100,40 +108,75 @@ For every recurring monitor:
 
 3. On EVERY cron execution:
 
+   STEP 1:
+
    * call `okx-dex-market`
    * fetch:
 
-     * live token price
+     * live price
      * 24h change
      * volatility
      * market context
+
+   STEP 2:
+   If `okx-dex-market` fails:
+
+   * call `okx-dex-token`
+   * resolve token metadata
+   * resolve token identifiers
+   * attempt secondary token market lookup
+
+   STEP 3:
+   If BOTH tools fail:
+
+   * use web search as final fallback
+   * search live token market price
+   * continue monitoring loop
+
+   STEP 4:
+
    * evaluate trigger conditions
-   * generate alert summary
+   * generate trader-friendly alert
+
+   STEP 5:
+
    * send Telegram / Discord notification
 
 4. Repeat continuously until stopped
 
 ---
 
-# Mandatory Tool Usage
+# Mandatory Tool Priority
 
-Recurring monitoring MUST use:
+The agent MUST use tools in THIS EXACT ORDER:
 
-* `cron`
-* `okx-dex-market`
-* `telegram.sendMessage`
+1. `okx-dex-market`
+2. `okx-dex-token`
+3. web search fallback
 
-The workflow MUST be:
+The agent MUST NEVER:
 
-Cron Trigger
-→ `okx-dex-market`
-→ Live Market Fetch
-→ Trigger Evaluation
-→ Alert Formatting
-→ Telegram Notification
-→ Repeat
+* skip tool execution
+* send fake prices
+* hallucinate market data
+* send notifications without fetching live data
 
-The agent MUST NEVER send Telegram updates without first calling `okx-dex-market`.
+---
+
+# Required Cron Prompt Behavior
+
+Every cron execution MUST behave like:
+
+"You are executing the dex-smart-alerts autonomous monitoring skill."
+
+The cron workflow MUST:
+
+* rebind skill identity
+* re-enable monitoring behavior
+* re-enable tool usage instructions
+* continue autonomous execution
+
+The cron execution MUST NEVER revert to generic assistant behavior.
 
 ---
 
@@ -189,7 +232,7 @@ Examples:
 
 # Trigger Coverage Matrix
 
-The skill should recognize ALL of the following as autonomous recurring monitoring requests.
+The skill should recognize ALL of the following as recurring monitoring requests.
 
 ## Standard Trading Phrases
 
@@ -233,7 +276,7 @@ The skill should recognize ALL of the following as autonomous recurring monitori
 
 # Notification Format
 
-Alerts should always include:
+Alerts should ALWAYS include:
 
 * token name
 * current price
@@ -244,7 +287,7 @@ Alerts should always include:
 
 ---
 
-## Example Standard Monitor
+## Standard Monitor Format
 
 🟢 BTC Monitor
 
@@ -255,7 +298,7 @@ Time: 2026-05-10 12:45 UTC
 
 ---
 
-## Example Breakout Alert
+## Breakout Alert
 
 🚀 BTC Breakout Detected
 
@@ -265,7 +308,7 @@ Move: +3.4%
 
 ---
 
-## Example Dump Alert
+## Dump Alert
 
 🔴 ETH Dump Alert
 
@@ -302,9 +345,10 @@ Supported:
 ## Price Fetch Failure
 
 * retry up to 3 times
-* fallback to secondary price source if available
+* fallback to `okx-dex-token`
+* fallback to web search
 * continue monitoring loop
-* notify only if retries fail
+* notify only if all retries fail
 
 ---
 
@@ -372,6 +416,7 @@ This skill DOES NOT:
 # Required Skills
 
 * okx-dex-market
+* okx-dex-token
 
 ---
 
@@ -379,7 +424,9 @@ This skill DOES NOT:
 
 * cron
 * okx-dex-market
+* okx-dex-token
 * telegram.sendMessage
+* web search fallback
 
 ---
 
@@ -395,7 +442,7 @@ This skill DOES NOT:
 
 # Runtime Philosophy
 
-This skill is designed to behave like a proactive autonomous market monitoring agent.
+This skill is designed to behave like a proactive autonomous crypto market assistant instead of a passive alert bot.
 
 The workflow prioritizes:
 
@@ -405,5 +452,6 @@ The workflow prioritizes:
 * trader-friendly notifications
 * low-friction setup
 * reliable alert delivery
+* fallback recovery logic
 
-The agent should behave like an always-running crypto market assistant, not a passive alert bot.
+The agent should behave like an always-running market monitoring system with resilient tool fallback behavior.
