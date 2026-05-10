@@ -30,9 +30,11 @@ Example requests:
 Execution workflow:
 
 User Request
+→ Generate Autonomous Task Assistant Prompt
 → Create Cron Schedule
 → Cron Trigger
-→ Fetch OKX DEX Market Data
+→ Execute `okx-dex-market`
+→ Fetch Live Market Data
 → Evaluate Trigger Conditions
 → Format Alert Message
 → Send Notification
@@ -40,8 +42,8 @@ User Request
 
 Fallback workflow:
 
-okx-dex-market
-→ okx-dex-token
+`okx-dex-market`
+→ `okx-dex-token`
 → web search fallback
 
 The skill behaves as an autonomous monitoring agent, not a passive reminder system.
@@ -118,14 +120,14 @@ Examples:
 
 4. The skill automatically:
 
-* Creates recurring cron jobs
-* Calls `okx-dex-market`
-* Fetches live OKX DEX market data
-* Falls back to `okx-dex-token` if needed
-* Uses web search as final fallback
+* Creates recurring cron jobs with autonomous Task Assistant Prompts
+* Uses `okx-dex-market` to fetch live OKX DEX market data
+* Falls back to `okx-dex-token` if market lookup fails
+* Uses web search as final fallback if both OKX tools fail
 * Evaluates trigger conditions
-* Formats alert messages
-* Sends notifications automatically
+* Formats trader-friendly alert messages
+* Sends notifications automatically to Telegram / Discord
+* Continues recurring monitoring until stopped
 
 5. Monitoring continues persistently until explicitly stopped
 

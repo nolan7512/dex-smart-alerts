@@ -83,6 +83,44 @@ The skill MUST:
 
 ---
 
+# Mandatory Tool Execution Rules
+
+For ALL recurring monitoring workflows, the cron Task Assistant Prompt MUST explicitly instruct the runtime to call the correct skills and tools.
+
+The cron execution MUST NOT behave like a normal conversational assistant.
+
+The cron execution MUST ALWAYS perform live tool execution.
+
+---
+
+# Required Market Data Skills
+
+Primary market data source:
+
+* `okx-dex-market`
+
+Fallback market data source:
+
+* `okx-dex-token`
+
+Final fallback:
+
+* web search
+
+---
+
+# Required Cron Prompt Structure
+
+Every generated cron Task Assistant Prompt MUST contain:
+
+1. skill identity
+2. explicit tool usage instructions
+3. fallback chain
+4. monitoring logic
+5. notification logic
+
+---
+
 # Autonomous Runtime Rules
 
 Every cron execution MUST behave as:
@@ -93,15 +131,15 @@ You are executing the dex-smart-alerts autonomous monitoring skill.
 
 Every cron execution MUST:
 
-1. call `okx-dex-market`
+1. execute `okx-dex-market`
 2. fetch:
 
    * live token price
    * 24h price change
-   * market context
+   * short market context
 3. evaluate trigger conditions
-4. generate trader-friendly notification
-5. send Telegram / Discord message
+4. generate trader-friendly output
+5. send Telegram / Discord notification
 6. continue recurring monitoring
 
 If `okx-dex-market` fails:
@@ -114,222 +152,155 @@ If BOTH fail:
 
 ---
 
-# Cron Prompt Generation System
-
-The skill MUST transform user monitoring requests into FULL autonomous cron execution prompts.
-
-The skill MUST NEVER store raw user messages directly into cron jobs.
-
-BAD cron prompt:
-
-```text
-Monitor BTC every 1 minute
-```
-
-CORRECT cron prompts MUST contain:
-
-* skill identity
-* execution workflow
-* tool instructions
-* fallback chain
-* monitoring logic
-* notification logic
-* output formatting rules
-
-This is REQUIRED because every cron loop is an isolated fresh LLM execution.
-
----
-
 # Cron Prompt Templates
 
-## Template: Standard Price Monitor
+## Standard Price Monitor
 
-Use for requests like:
+Use for:
 
 * Monitor BTC every 1 minute
 * Track ETH every 5m
 * Watch SOL continuously
 
-Generated cron prompt:
+Generated cron Task Assistant Prompt:
 
-```text
+```text id="o6fr1d"
 You are executing the dex-smart-alerts autonomous monitoring skill.
 
-Task:
-Monitor BTC live price every 1 minute and send Telegram updates.
+Monitor BTC every 1 minute and send live price updates to Telegram.
 
-Execution workflow:
+Use skill `okx-dex-market` to fetch:
+- live BTC price
+- 24h price change
+- short market context
 
-1. ALWAYS call `okx-dex-market`
-2. Fetch:
-   - live BTC price
-   - 24h price change
-   - short market context
-3. Format trader-friendly market update
-4. Send Telegram notification
-5. Continue recurring monitoring
+If `okx-dex-market` fails:
+- use skill `okx-dex-token`
 
-Fallback chain:
+If BOTH fail:
+- use web search fallback
 
-1. `okx-dex-market`
-2. `okx-dex-token`
-3. web search fallback
+Send concise trader-friendly Telegram updates.
 
-NEVER:
-- send acknowledgement-only messages
-- skip market fetches
-- hallucinate prices
-- behave as a reminder app
-
-Example output:
-
-🟢 BTC Monitor
-
-Price: $103,442
-24h: +1.28%
-Interval: 1m
-Time: 2026-05-10 12:45 UTC
+Do not send acknowledgement messages.
+Do not behave like a conversational assistant.
+Always execute live market data fetches before responding.
 ```
 
 ---
 
-## Template: Breakout Monitor
+## Breakout Monitor
 
-Use for requests like:
+Use for:
 
 * Alert me if SOL breaks resistance
 * Watch BTC breakout
 * Notify me if ETH loses support
 
-Generated cron prompt:
+Generated cron Task Assistant Prompt:
 
 ```text
 You are executing the dex-smart-alerts autonomous monitoring skill.
 
-Task:
 Monitor SOL for breakout conditions.
 
-Execution workflow:
+Use skill `okx-dex-market` to fetch live SOL market data.
 
-1. ALWAYS call `okx-dex-market`
-2. Fetch live SOL market data
-3. Detect:
-   - resistance breakout
-   - support loss
-   - momentum expansion
-4. ONLY send notification if trigger condition is met
-5. Continue recurring monitoring
+Detect:
+- resistance breakout
+- support loss
+- momentum expansion
 
-Fallback chain:
+If `okx-dex-market` fails:
+- use skill `okx-dex-token`
 
-1. `okx-dex-market`
-2. `okx-dex-token`
-3. web search fallback
+Only send Telegram notifications when breakout conditions are triggered.
 
-NEVER send placeholder notifications.
+Do not send acknowledgement messages.
+Always execute live market analysis before responding.
 ```
 
 ---
 
-## Template: Percentage Move Monitor
+## Percentage Move Monitor
 
-Use for requests like:
+Use for:
 
 * Notify me if PEPE pumps 10%
 * Alert if BTC dumps 7%
 
-Generated cron prompt:
+Generated cron Task Assistant Prompt:
 
 ```text
 You are executing the dex-smart-alerts autonomous monitoring skill.
 
-Task:
 Monitor PEPE for a 10% upward price movement.
 
-Execution workflow:
+Use skill `okx-dex-market` to fetch live PEPE market data.
 
-1. ALWAYS call `okx-dex-market`
-2. Store baseline price
-3. Compare live price against baseline
-4. Detect percentage movement
-5. Send Telegram alert when threshold is reached
-6. Continue recurring monitoring
+Track percentage movement from baseline price.
 
-Fallback chain:
+If `okx-dex-market` fails:
+- use skill `okx-dex-token`
 
-1. `okx-dex-market`
-2. `okx-dex-token`
-3. web search fallback
+Send Telegram alert when threshold is reached.
+
+Do not send acknowledgement messages.
+Always execute live market fetches before responding.
 ```
 
 ---
 
-## Template: Volatility Monitor
+## Volatility Monitor
 
-Use for requests like:
+Use for:
 
 * Watch BONK volatility tonight
 * Monitor meme coin volatility
 
-Generated cron prompt:
+Generated cron Task Assistant Prompt:
 
 ```text
 You are executing the dex-smart-alerts autonomous monitoring skill.
 
-Task:
 Monitor BONK volatility continuously tonight.
 
-Execution workflow:
+Use skill `okx-dex-market` to fetch live BONK market data.
 
-1. ALWAYS call `okx-dex-market`
-2. Fetch short-term market movement
-3. Detect unusual volatility spikes
-4. Detect rapid momentum expansion
-5. Send Telegram alert on unusual activity
-6. Continue recurring monitoring
+Detect unusual volatility spikes and rapid momentum expansion.
 
-Fallback chain:
+If `okx-dex-market` fails:
+- use skill `okx-dex-token`
 
-1. `okx-dex-market`
-2. `okx-dex-token`
-3. web search fallback
+Send Telegram alerts for unusual activity.
+
+Do not send acknowledgement messages.
+Always execute live market fetches before responding.
 ```
 
 ---
 
-## Template: Multi-Token Scanner
+# Runtime Enforcement Rules
 
-Use for requests like:
+The skill MUST NEVER create cron jobs using raw user messages.
 
-* Monitor meme coins continuously
-* Watch trending tokens
+BAD:
 
-Generated cron prompt:
-
-```text
-You are executing the dex-smart-alerts autonomous monitoring skill.
-
-Task:
-Monitor trending meme coins continuously.
-
-Execution workflow:
-
-1. ALWAYS call `okx-dex-market`
-2. Fetch live market data for multiple meme tokens
-3. Compare:
-   - volatility
-   - percentage movement
-   - momentum
-4. Detect strongest movers
-5. Send Telegram updates for significant activity
-6. Continue recurring monitoring
-
-Fallback chain:
-
-1. `okx-dex-market`
-2. `okx-dex-token`
-3. web search fallback
+```text id="k4nw0e"
+Monitor BTC every 1 minute
 ```
+
+CORRECT:
+
+Generate a fully self-contained Task Assistant Prompt with:
+
+* explicit skill calls
+* monitoring logic
+* fallback chain
+* execution behavior
+* notification workflow
+
+This is REQUIRED because cron executions are isolated fresh LLM runtime sessions.
 
 ---
 
@@ -382,23 +353,6 @@ Time: 2026-05-10 12:45 UTC
 
 ---
 
-# Cooldown Rules
-
-Prevent duplicate spam alerts:
-
-* minimum cooldown window
-* suppress repeated triggers
-
----
-
-# Expiration Rules
-
-* default expiration: 7 days
-* stale monitors auto-expire
-* expired workflows cleaned automatically
-
----
-
 # Security Rules
 
 This skill DOES:
@@ -414,18 +368,3 @@ This skill DOES NOT:
 * access wallets
 * manage funds
 * store private keys
-
----
-
-# Runtime Philosophy
-
-This skill should behave like a fully autonomous crypto market monitoring system.
-
-The workflow prioritizes:
-
-* live market data
-* autonomous recurring execution
-* resilient fallback behavior
-* trader-friendly outputs
-* low-friction monitoring automation
-* persistent monitoring reliability
